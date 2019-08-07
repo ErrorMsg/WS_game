@@ -1,5 +1,5 @@
 var _player = {
-	level:0,
+	level:1,
 	block:0,
 	pos:0,   //position with level and block
 	hp:10,   //add 10 hp each time move to higher level

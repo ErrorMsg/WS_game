@@ -1,4 +1,6 @@
-package main
+//player info
+
+package srv
 
 import (
 	"net"
@@ -6,23 +8,24 @@ import (
 )
 
 type Player struct{
-	Position
+	Position   //position in map
 	Summary
-	Equipment
+	Equip
 	Link
+	HandCards []interface{}   //[]Card？
 }
 
-//player's position info in chess
+//player's position
 type Position struct{
 	P_level int
-	P_block int
-	P_pos int
+	P_block int   //blocks from start point to current point
+	P_pos int   //real position
 }
-
 
 //player's summary info
 type Summary struct{
 	S_hp int
+	S_maxhp int
 	S_atk int
 	S_def int
 	S_spd int
@@ -31,11 +34,12 @@ type Summary struct{
 }
 
 //player's equipment info
-type Equipment struct{
+type Equips struct{
+	Equipments []int   //[head, weapon0, weapon1, weapon2, body, shoes, jewelry1, jewelry2]
 	E_head int
-	E_weapon0 int
-	E_weapon1 int
-	E_weapon2 int
+	E_weapon0 int   //two hands weapon
+	E_weapon1 int   //one hand weapon1
+	E_weapon2 int   //one hand weapon2
 	E_body int
 	E_shoes int
 	E_jewelry1 int
@@ -44,6 +48,11 @@ type Equipment struct{
 
 //player's connect info
 type Link struct{
-	addr net.TCPAddr
-	name string
+	L_addr net.TCPAddr
+	L_Name string
+	L_ID int
 }
+
+
+//return player list for map update
+var PlayerList map[int]Player
