@@ -229,8 +229,9 @@ function moveBlock(p){
 	console.log("moving to "+p.block);
 	if (p.block != 0){
 		pickExp(p);
-	}else if (){
+	}else if (p.level==5){
 		vsBoss(p);
+		p.level = 0;
 	}else{
 		initLevel(p.level);
 		pickExp(p);
@@ -302,7 +303,14 @@ function useCard(p,card){
 
 function removeCard(p,card){
 	var i = p.handcards.indexof(card);
-	var cc = p.handcards[0:i].concat(p.handcards[i:p.handcards.length]);
+	//var cc = p.handcards[0:i].concat(p.handcards[i+1:p.handcards.length]);
+	var cc = [];
+	for (var j=0;j<i;j++){
+		cc[j] = p.handcards[j];
+	}
+	for (var j=i;j<p.handcards.length-1;j++){
+		cc[j]=p.handcards[j+1];
+	}
 	p.handcards = cc;
 	drawHandcards(p);
 }

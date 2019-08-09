@@ -22,11 +22,29 @@
 
             sock.onmessage = function(e) {
                 console.log("message received: " + e.data);
+				try{
+					ts = JSON.parse(e.data);
+					console.log(ts.Name, ts.Age);
+				}
+				catch(err){}
             }
         };
 
+		function setmsg() {
+			var playerlist = [];
+			player1 = {Name:"p1", Age:10, Level:1, Hands:[]};
+			player2 = {Name:"p2", Age:20, Level:2, Hands:[2,22,222]};
+			playerlist[0] = player1;
+			playerlist[1] = player2;
+			msg = "j"+JSON.stringify(playerlist);
+			return msg;
+		}
+		
         function send() {
             var msg = document.getElementById('message').value;
+			if (msg=="ts"){
+				msg = setmsg();
+			}
 			console.log(msg);
             sock.send(msg);
         };

@@ -92,14 +92,18 @@ func ReadFrame(data []byte) (Frame,error){
 }
 
 //received = frame.application
-func HandleReceived(received []byte, maskingkey []byte) []byte{
+//dealmsg is a function, func([]byte)bool, if deal with received data success, return true, else return false, use it to unmarshal json
+func HandleReceived(received []byte, maskingkey []byte, dealmsg func([]byte)bool) []byte{
 	if maskingkey != nil{
 		for i:=0;i<len(received);i++{
 			received[i] = received[i] ^ maskingkey[i%4]
 		}
 	}
+	
 	//rData := string(received)
-	log.Println("receive msg: ", string(received))
+	if ok:=dealmsg(received);!ok{
+		log.Println("receive msg: ", string(received))
+	}
 	return received
 	/*switch msgType := received[0];msgType{
 	case 0x00: //normal message, broadcast it

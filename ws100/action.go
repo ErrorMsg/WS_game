@@ -1,6 +1,6 @@
 //define actions
-//html动作 选择起点，移动，买卖，加入手牌，弃牌，选择攻击对象攻击方法，
-//srv动作 初始化地图，洗牌shuffle，初始化人物，翻牌pickcard，处理事件牌handlerexp，商店，战斗，休息，使用牌handleruse
+//html动作: 选择起点，移动，买卖，加入手牌，弃牌，选择攻击对象攻击方法，
+//srv动作: 初始化地图，洗牌shuffle，初始化人物，翻牌pickcard，处理事件牌handlerexp，商店，战斗，休息，使用牌handleruse
 //发送data typelen + [[jsontype1,datalen1],[jsontype2,datalen2]...]+jsondata1+jsondata2+...
 
 package srv
@@ -69,11 +69,11 @@ func handlerPick(data []byte) error{
 		}
 		//send back pick cards []Card
 	default:
-		
+		return errors.New("pick card failed")
 	}
 }
 
-//most choose action on html
+//most choose action will on html
 type ActionChoose struct{
 	PID int
 	CardID int
@@ -134,6 +134,7 @@ func handlerBattle(data []byte) error{
 	if err != nil{
 		return err
 	}
+	player := PlayerList[info.PID]
 }
 
 
@@ -163,7 +164,7 @@ func handlerUse(data []byte) error{
 	if err != nil{
 		return err
 	}
-	player := PlayerList[PID]
+	player := PlayerList[info.PID]
 	//get card from db by info.CardID
 	//card := 
 	if card.C_kind == 2{   //card.Card.C_kind
@@ -174,7 +175,7 @@ func handlerUse(data []byte) error{
 			player.E_weapon0 = card.C_id
 		case 3:
 			if player.E_weapon1 != 0 && player.E_weapon2 != 0{
-				
+				//send back, player select one, then replace it
 			}else if player.E_weapon1 != 0{
 				player.E_weapon2 = card.C_id
 			}else{
@@ -186,7 +187,7 @@ func handlerUse(data []byte) error{
 			player.E_shoes = card.C_id
 		case 6:
 			if player.E_jewelry1 != 0 && player.E_jewelry2 != 0{
-				
+				//send back, player select one, then replace it
 			}else if player.E_jewelry1 != 0{
 				player.E_jewelry2 = card.C_id
 			}else{
@@ -194,9 +195,9 @@ func handlerUse(data []byte) error{
 			}
 		}
 	}else if card.C_kind == 3{
-	
+		//use freecard
 	}else{
-	
+		return errors.New("can't use such card")
 	}
 }
 

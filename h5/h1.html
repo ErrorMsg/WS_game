@@ -23,9 +23,42 @@
 		
 		InitCV1();
 	</script>-->
-	<script src="h2.js"></script>
+	<!--<script src="h2.js"></script>
 	<script>
 		gen60();
+	</script>-->
+	<script src="h3ws.js"></script>
+	<script>
+		init();
+		var sock = null;
+        var wsuri = "ws://127.0.0.1:9001";
+
+        window.onload = function() {
+
+            console.log("onload");
+
+            sock = new WebSocket(wsuri);
+
+            sock.onopen = function() {
+                console.log("connected to " + wsuri);
+            }
+
+            sock.onclose = function(e) {
+                console.log("connection closed (" + e.code + ")");
+            }
+
+            //sock.onmessage = function(e) {
+                //console.log("message received: " + e.data);
+            //}
+			sock.onmessage = function(e){
+				Receive(e);
+			};
+        };
+		
+        function send(msg) {
+			console.log(msg);
+            sock.send(msg);
+        };
 	</script>
 </body>
 </html>

@@ -11,8 +11,8 @@ type Player struct{
 	Position   //position in map
 	Summary
 	Equip
-	Link
-	HandCards []interface{}   //[]Card？
+	//Link
+	HandCards []int   //[]CardID
 }
 
 //player's position

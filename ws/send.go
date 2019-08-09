@@ -5,12 +5,12 @@ import (
 	_ "net"
 	"bytes"
 	"math"
-	"sync"
+	_ "sync"
 	_ "time"
 	"io"
 )
 
-var mu sync.Mutex
+//var mu sync.Mutex
 
 //real method to send any data
 func SendWS(w io.Writer, data []byte) error{

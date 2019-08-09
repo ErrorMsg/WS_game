@@ -12,12 +12,19 @@ type WS struct{
 	Mu sync.Mutex
 }
 
+func NewWS(conn net.Conn) *WS{
+	return &WS{
+		C:conn,
+		Closed:make(chan struct{}),
+	}
+}
+
 func (ws WS) Close(){
 	ws.C.Close()
 	close(ws.Closed)
 }
 
-func HandleWS(bufChan chan []byte, ws WS, cs *AuthConns){
+func (ws *WS)HandleWS(bufChan chan []byte, cs *AuthConns, dealmsg func([]byte)bool){
 	//get received frame from bufChan
 	for buf := range bufChan{
 		frame, err := ReadFrame(buf)
@@ -31,11 +38,11 @@ func HandleWS(bufChan chan []byte, ws WS, cs *AuthConns){
 			log.Println(frame.length)
 			
 			//get deocded data
-			rData := HandleReceived(frame.application, frame.maskingkey) 
+			rData := HandleReceived(frame.application, frame.maskingkey, dealmsg) 
 			
-			//if this is a public message, add sender and broadcast it
-			pData := append([]byte(ws.C.RemoteAddr().String()), rData...) 
-			cs.PubChan <- PubMsg{Sender:ws.C, Message:pData}
+			//if this is a public message, add sender and broadcast it, cs.PubChan can store 10 public message only
+			//pData := append([]byte(ws.C.RemoteAddr().String()), rData...) 
+			//cs.PubChan <- PubMsg{Sender:ws.C, Message:pData}
 			
 			err := ws.SendFrame([][]byte{rData})
 			if err != nil{
